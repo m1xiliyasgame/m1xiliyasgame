@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mind Quest — 3 Games</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#fff;background:#020714;font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 12% 10%,#153b91 0,transparent 28%),radial-gradient(circle at 88% 18%,#5b1680 0,transparent 30%),radial-gradient(circle at 45% 100%,#006b73 0,transparent 30%),#020714}
+body:after{content:"";position:fixed;inset:0;z-index:-1;opacity:.13;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:70px 70px}
+.wrap{width:min(1500px,96%);margin:auto;padding:16px 0 40px}
+header{height:78px;border:1px solid #2d62b6;border-radius:22px;background:#061126e8;display:flex;align-items:center;gap:22px;padding:10px 18px;box-shadow:0 0 35px #167cff25;backdrop-filter:blur(18px)}
+.logo{display:flex;align-items:center;min-width:310px}.logoIcon{font-size:48px;filter:drop-shadow(0 0 12px #4bf)}.logoText{font-size:28px;font-weight:900;letter-spacing:1px;background:linear-gradient(90deg,#fff,#65eaff,#b14dff);-webkit-background-clip:text;color:transparent}.tag{font-size:11px;color:#63eaff;letter-spacing:2px}
+nav{display:flex;gap:5px;flex:1;justify-content:center}nav button{border:0;background:transparent;color:#b9c9e6;padding:12px 15px;border-radius:13px;font-weight:700;cursor:pointer}nav button.active,nav button:hover{background:linear-gradient(100deg,#204cff,#922cff);color:#fff;box-shadow:0 0 20px #6c39ff66}
+.profile{display:flex;align-items:center;gap:9px;border:1px solid #2b4f84;padding:7px 12px;border-radius:16px;white-space:nowrap}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#16dfff,#9a2bff);font-size:23px}.xp{height:5px;width:80px;background:#172847;border-radius:5px;margin-top:4px}.xp i{display:block;width:68%;height:100%;background:#18ddff;border-radius:5px}
+.hero{margin-top:18px;min-height:250px;padding:34px 42px;border:1px solid #315fa9;border-radius:27px;background:linear-gradient(100deg,#071a38dd,#15255ddd 48%,#3d135ddd);position:relative;overflow:hidden}.hero:after{content:"🧠";position:absolute;right:7%;top:8px;font-size:180px;opacity:.15;filter:drop-shadow(0 0 25px #42dfff)}.hero h1{font-size:clamp(42px,6vw,72px);margin:3px 0;background:linear-gradient(90deg,#fff,#50eaff,#cc56ff);-webkit-background-clip:text;color:transparent}.hero p{color:#b6c8e4;max-width:640px;line-height:1.55}.start{border:0;border-radius:14px;padding:14px 24px;color:white;font-weight:900;background:linear-gradient(100deg,#086cff,#c12cff);box-shadow:0 0 25px #6e36ff77;cursor:pointer}.sectionTitle{text-align:center;margin:22px 0 12px;color:#68eaff;font-size:22px;font-weight:900;letter-spacing:1px}
+.gameCard{border:1px solid #2458a5;border-radius:22px;background:#061027e8;margin:16px 0;padding:16px;display:grid;grid-template-columns:290px 1fr;gap:16px;box-shadow:0 18px 45px #0009;position:relative;overflow:hidden}.gameCard.memory{border-color:#a12bd3}.gameCard.logic{border-color:#10bb72}
+.info{border:1px solid #244e88;border-radius:17px;padding:18px;background:linear-gradient(145deg,#0a1934,#071024);display:flex;flex-direction:column;justify-content:center}.memory .info{background:linear-gradient(145deg,#221044,#100a27)}.logic .info{background:linear-gradient(145deg,#062d2b,#071a21)}.icon{font-size:65px;text-align:center;filter:drop-shadow(0 0 15px #23dfff)}.memory .icon{filter:drop-shadow(0 0 15px #d52cff)}.logic .icon{filter:drop-shadow(0 0 15px #39ff6c)}.info h2{margin:4px 0;font-size:25px}.info p{color:#9db0d1;font-size:13px}.play{border:0;border-radius:12px;padding:12px;background:linear-gradient(90deg,#155dff,#9d2dff);color:#fff;font-weight:900;cursor:pointer}.memory .play{background:linear-gradient(90deg,#7720db,#e02adf)}.logic .play{background:linear-gradient(90deg,#008c74,#30df36)}
+.levelPanel{border:1px solid #21477d;border-radius:17px;padding:14px;background:#030b1bdd}.levelHead{display:flex;justify-content:center;align-items:center;gap:12px;color:#55eaff;font-weight:900;margin-bottom:12px}.levels{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}.level{min-height:55px;border:1px solid #24538d;background:#07152c;border-radius:12px;color:#91add3;font-size:15px;font-weight:900;cursor:pointer;position:relative;transition:.18s}.level:hover:not(.locked){transform:translateY(-3px);border-color:#65efff}.level.current{background:linear-gradient(145deg,#1b63ff,#8e27ff);color:#fff;box-shadow:0 0 18px #633cff66}.level.done{background:#075d60;color:#83fff1;border-color:#16e1c8}.level.locked{opacity:.35;cursor:not-allowed}.level.current:before{content:"★";position:absolute;top:-8px;right:-5px;color:#ffd52a}
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:15px;z-index:50}.modal.show{display:flex}.gamebox{width:min(720px,100%);max-height:92vh;overflow:auto;border:1px solid #3968b0;border-radius:24px;background:#07142c;padding:23px;box-shadow:0 0 70px #005eff44}.close{float:right;border:0;background:#192a48;color:white;border-radius:9px;padding:8px 11px;cursor:pointer}.gameTitle{font-size:25px;color:#64eaff;font-weight:900}.clock{text-align:right;color:#ffd34b}.question{text-align:center;font-size:24px;line-height:1.4;margin:25px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ans{border:1px solid #335785;background:#0b1b35;color:white;border-radius:12px;padding:15px;font-size:17px;cursor:pointer}.ans:hover{background:#17365d}.feedback{text-align:center;min-height:27px;margin:15px;color:#75f5d4;font-weight:800}.memoryGrid{display:grid;grid-template-columns:repeat(4,72px);justify-content:center;gap:10px}.mem{height:72px;border-radius:12px;border:1px solid #7545b4;background:#25145a;color:white;font-size:27px;cursor:pointer}.mem.open{background:#8229ad}.mem.ok{background:#087e71}.finish{display:block;margin:15px auto;border:0;border-radius:12px;padding:13px 24px;background:linear-gradient(90deg,#1b6cff,#b52cff);color:#fff;font-weight:900;cursor:pointer}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);opacity:0;background:#101e39;border:1px solid #3c6bb0;border-radius:12px;padding:12px 18px;z-index:100;transition:.3s}.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media(max-width:900px){header{height:auto;flex-wrap:wrap}.logo{min-width:auto;flex:1}.profile{display:none}nav{order:3;width:100%;overflow:auto;justify-content:flex-start}.gameCard{grid-template-columns:1fr}.levels{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:500px){.wrap{width:94%}.hero{padding:25px}.gameCard{padding:10px}.levels{grid-template-columns:repeat(4,1fr);gap:6px}.level{min-height:45px}.answers{grid-template-columns:1fr}.memoryGrid{grid-template-columns:repeat(4,58px)}.mem{height:58px}.hero:after{font-size:110px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div class="logo"><div class="logoIcon">🧠</div><div><div class="logoText">MIND QUEST</div><div class="tag">PLAY • THINK • WIN</div></div></div>
+ <nav><button class="active">⌂ HOME</button><button onclick="scrollToGame('puzzle')">🧩 PUZZLE</button><button onclick="scrollToGame('memory')">🧠 MEMORY</button><button onclick="scrollToGame('logic')">💡 LOGIC</button></nav>
+ <div class="profile"><div class="avatar">👤</div><div><b>PLAYER</b><small style="display:block;color:#4feaff">LEVEL <span id="playerLevel">1</span></small><div class="xp"><i></i></div></div>🏆 <b id="score">0</b></div>
+</header>
+
+<section class="hero">
+ <small style="color:#63eaff;letter-spacing:2px">WELCOME TO</small>
+ <h1>MIND QUEST</h1>
+ <p>Three different brain games. Each game has its own Level 1–20 progression. Complete a level to unlock the next one.</p>
+ <button class="start" onclick="startCurrent()">▶ START GAME</button>
+</section>
+
+<div class="sectionTitle">🎮 THREE GAMES • SEPARATE LEVELS</div>
+
+<section class="gameCard puzzle" id="puzzle">
+ <div class="info"><div class="icon">🧩</div><h2 style="color:#61eaff">PUZZLE MASTER</h2><p>Arrange, calculate and find the correct pattern.</p><button class="play" onclick="play('puzzle')">▶ PLAY GAME</button></div>
+ <div class="levelPanel"><div class="levelHead">👑 PUZZLE MASTER LEVELS <span id="puzzleNow"></span></div><div class="levels" id="puzzleLevels"></div></div>
+</section>
+
+<section class="gameCard memory" id="memory">
+ <div class="info"><div class="icon">🧠</div><h2 style="color:#ef76ff">MEMORY TEST</h2><p>Remember the cards and match every pair.</p><button class="play" onclick="play('memory')">▶ PLAY GAME</button></div>
+ <div class="levelPanel"><div class="levelHead" style="color:#ed72ff">🧠 MEMORY TEST LEVELS <span id="memoryNow"></span></div><div class="levels" id="memoryLevels"></div></div>
+</section>
+
+<section class="gameCard logic" id="logic">
+ <div class="info"><div class="icon">💡</div><h2 style="color:#65ff9d">LOGIC CHALLENGE</h2><p>Think smart, solve fast and beat every logic test.</p><button class="play" onclick="play('logic')">▶ PLAY GAME</button></div>
+ <div class="levelPanel"><div class="levelHead" style="color:#62ff9d">💡 LOGIC CHALLENGE LEVELS <span id="logicNow"></span></div><div class="levels" id="logicLevels"></div></div>
+</section>
+</div>
+
+<div class="modal" id="modal"><div class="gamebox"><button class="close" onclick="closeGame()">✕</button><div class="gameTitle" id="gameTitle"></div><div class="clock">⏱ <span id="time">30</span>s</div><div id="gameArea"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const progress={
+ puzzle:Number(localStorage.getItem("mq_puzzle")||1),
+ memory:Number(localStorage.getItem("mq_memory")||1),
+ logic:Number(localStorage.getItem("mq_logic")||1)
+};
+let score=Number(localStorage.getItem("mq_score")||0), activeType="puzzle",timer=null;
+
+const qs={
+ puzzle:[
+ ["What comes next? 2, 4, 6, ?",["7","8","9","10"],1],["Which shape is different?",["🔵","🔵","🔺","🔵"],2],
+ ["5 + 5 × 2 = ?",["15","20","25","10"],0],["Which has 3 sides?",["⬜","🔺","⚪","⭐"],1],
+ ["Complete: A B A B ?",["A","B","C","D"],0],["Which number is largest?",["19","29","39","9"],2],
+ ["What is 7 × 7?",["42","49","56","63"],1],["Which is a perfect square?",["12","16","18","20"],1],
+ ["20, 18, 16, ?",["12","13","14","15"],2],["25 + 17 − 9 = ?",["31","32","33","34"],2],
+ ["Which is smallest?",["31","13","23","33"],1],["Which shape has 4 equal sides?",["🔺","⬜","⚪","⭐"],1],
+ ["9 + 8 = ?",["15","16","17","18"],2],["5, 10, 15, ?",["18","20","25","30"],1],
+ ["Find the duplicate.",["🍎","🍌","🍇","🍎"],0],["Which arrow points LEFT?",["➡️","⬆️","⬅️","⬇️"],2],
+ ["3, 6, 9, ?",["10","11","12","13"],2],["Which is different?",["⭐","⭐","💎","⭐"],2],
+ ["100 ÷ 10 = ?",["5","10","20","50"],1],["FINAL: 12 × 2 + 6 = ?",["28","30","32","36"],1]
+ ],
+ logic:[
+ ["ALL ZIPS are ZAPS. What must be true?",["All ZIPS are ZAPS","All ZAPS are ZIPS","No ZIPS exist","Some ZIPS are not ZAPS"],0],
+ ["2, 4, 8, 16, ?",["20","24","32","36"],2],["A > B and B > C, then...",["A<C","A=C","A>C","Cannot know"],2],
+ ["Which does not belong?",["Dog","Cat","Lion","Car"],3],["Opposite of EAST?",["NORTH","SOUTH","WEST","UP"],2],
+ ["Monday + 2 days = ?",["Tuesday","Wednesday","Thursday","Friday"],1],["1kg iron vs 1kg cotton?",["Iron","Cotton","Same","Unknown"],2],
+ ["1, 3, 5, 7, ?",["8","9","10","11"],1],["Which word is longest?",["SUN","MOON","ELEPHANT","CAT"],2],
+ ["6 + 6 = ?",["10","12","14","18"],1],["Alphabetically first?",["DOG","APPLE","CAT","BALL"],1],
+ ["Triangle corners?",["2","3","4","5"],1],["NOT a planet?",["Mars","Venus","Moon","Earth"],2],
+ ["Double of 10?",["15","20","25","30"],1],["Which is a mammal?",["Shark","Dolphin","Eagle","Snake"],1],
+ ["Half of 50?",["20","25","30","35"],1],["4 boxes × 2 balls?",["6","8","10","12"],1],
+ ["Prime number?",["9","12","13","15"],2],["100 - 25 = ?",["65","70","75","80"],2],
+ ["FINAL: 25 + 17 − 9 = ?",["31","32","33","34"],2]
+ ]
+};
+
+function save(){Object.keys(progress).forEach(k=>localStorage.setItem("mq_"+k,progress[k]));localStorage.setItem("mq_score",score)}
+function render(){
+ ["puzzle","memory","logic"].forEach(type=>{
+  const box=document.getElementById(type+"Levels"),cur=progress[type];box.innerHTML="";
+  for(let i=1;i<=20;i++){
+   const b=document.createElement("button");b.className="level "+(i===cur?"current ":"")+(i<cur?"done ":"")+(i>cur?"locked":"");
+   b.textContent=i>cur?"🔒":i;
+   b.onclick=()=>{if(i>cur){toast("🔒 Complete Level "+(i-1)+" first in "+type.toUpperCase());return}progress[type]=i;save();render()};
+   box.appendChild(b);
+  }
+  document.getElementById(type+"Now").textContent="• Level "+cur;
+ });
+ document.getElementById("score").textContent=score.toLocaleString();
+ document.getElementById("playerLevel").textContent=Math.max(progress.puzzle,progress.memory,progress.logic);
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
+function scrollToGame(type){document.getElementById(type).scrollIntoView({behavior:"smooth",block:"center"})}
+function startCurrent(){play(activeType)}
+function play(type){
+ activeType=type;const level=progress[type];
+ clearInterval(timer);document.getElementById("modal").classList.add("show");document.getElementById("time").textContent=30;
+ let left=30;timer=setInterval(()=>{left--;document.getElementById("time").textContent=left;if(left<=0){clearInterval(timer);document.getElementById("gameArea").innerHTML='<div class="question">⏰ Time Up!</div><div class="feedback">Try Level '+level+' again.</div>'}},1000);
+ if(type==="memory")memory(level);else questionGame(type,level);
+}
+function closeGame(){clearInterval(timer);document.getElementById("modal").classList.remove("show")}
+function questionGame(type,level){
+ const d=qs[type][level-1]||qs[type][19];
+ document.getElementById("gameTitle").textContent=(type==="puzzle"?"🧩 PUZZLE MASTER":"💡 LOGIC CHALLENGE")+" • LEVEL "+level;
+ document.getElementById("gameArea").innerHTML=`<div class="question">${d[0]}</div><div class="answers">${d[1].map((x,i)=>`<button class="ans" onclick="check(${i===d[2]})">${x}</button>`).join("")}</div><div class="feedback" id="fb"></div>`;
+}
+function check(ok){if(ok)complete();else document.getElementById("fb").textContent="❌ Not correct. Think again!"}
+function memory(level){
+ document.getElementById("gameTitle").textContent="🧠 MEMORY TEST • LEVEL "+level;
+ const count=level<=5?4:level<=10?6:8,icons=["⭐","💎","🔥","🎯","🍀","⚡","👑","🧠"].slice(0,count);
+ const cards=[...icons,...icons].sort(()=>Math.random()-.5);
+ document.getElementById("gameArea").innerHTML='<div class="question">Find every matching pair.</div><div class="memoryGrid" id="memoryGrid"></div><div class="feedback" id="fb">Moves: 0</div>';
+ let first=null,lock=false,moves=0,found=0;
+ cards.forEach(v=>{const b=document.createElement("button");b.className="mem";b.textContent="?";b.onclick=()=>{
+  if(lock||b.classList.contains("ok")||b===first?.b)return;b.textContent=v;b.classList.add("open");
+  if(!first){first={b,v};return}
+  moves++;document.getElementById("fb").textContent="Moves: "+moves;
+  if(first.v===v){first.b.classList.add("ok");b.classList.add("ok");first=null;found+=2;if(found===cards.length)complete(Math.max(100,650-moves*10+level*5))}
+  else{lock=true;const f=first.b;setTimeout(()=>{f.textContent="?";b.textContent="?";f.classList.remove("open");b.classList.remove("open");first=null;lock=false},600)}
+ };document.getElementById("memoryGrid").appendChild(b)})
+}
+function complete(points=250){
+ clearInterval(timer);
+ const level=progress[activeType];score+=points;
+ if(level<20)progress[activeType]=level+1;
+ save();render();
+ document.getElementById("gameArea").innerHTML=`<div class="question">🎉 LEVEL ${level} COMPLETE!</div><div class="feedback">+${points} points<br>${level<20?"🔓 LEVEL "+(level+1)+" UNLOCKED!":"🏆 ALL 20 LEVELS COMPLETE!"}</div><button class="finish" onclick="${level<20?"play('"+activeType+"')":"closeGame()"}">${level<20?"NEXT LEVEL →":"FINISH 🏆"}</button>`;
+}
+render();  
+</script>
+</body>
+</html>
